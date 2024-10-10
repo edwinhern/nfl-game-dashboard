@@ -1,0 +1,5 @@
+FROM postgres:13
+
+ENV POSTGRES_DB=nfldb
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
