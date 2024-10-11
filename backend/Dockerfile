@@ -1,6 +1,9 @@
 FROM node:22.9.0-slim
+
+# Set environment variables for pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -21,4 +24,4 @@ RUN pnpm run build
 EXPOSE 8080
 
 # Start the app
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
