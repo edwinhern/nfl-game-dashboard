@@ -1,7 +1,10 @@
+import type { UUID } from "node:crypto";
+import type { ColumnType, Generated, Selectable } from "kysely";
+
 export type GameStatus = "onsale" | "presale" | "active" | "inactive" | "cancelled" | "rescheduled" | "offsale";
 
-export interface Game {
-	id: string;
+export interface GameTable {
+	id: Generated<UUID>;
 	name: string;
 	stadium_id: string;
 	ticket_vendor_id: string;
@@ -13,7 +16,10 @@ export interface Game {
 	min_price: number | null;
 	max_price: number | null;
 	status: GameStatus;
+	created_at: Generated<Date>;
+	modified_at: ColumnType<Date, string, never>;
 }
 
-export interface NewGame extends Omit<Game, "id"> {}
-export interface GameUpdate extends Partial<NewGame> {}
+export type Game = Selectable<GameTable>;
+export type InsertGame = GameTable;
+export type UpdateGame = GameTable;
