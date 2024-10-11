@@ -1,7 +1,8 @@
 import express from "express";
 
-import env from "@/common/config/env";
-import { logger, requestLogger } from "@/common/middleware/requestLogger";
+import env from "@/env";
+import db from "@/lib/database";
+import { logger, requestLogger } from "@/logger";
 
 const app = express();
 
@@ -11,8 +12,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 // Routes
-app.get("/", (_req: express.Request, res: express.Response) => {
-	res.json({ status: "API is running on /api" });
+app.get("/", async (_req: express.Request, res: express.Response) => {
+	const vendors = await db.selectFrom("ticket_vendors").selectAll().execute();
+	res.json({ status: "API is running on /api", response: vendors });
 });
 
 app.listen(env.PORT, () => {
