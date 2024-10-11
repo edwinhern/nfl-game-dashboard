@@ -1,7 +1,7 @@
 import express from "express";
 
 import env from "@/common/config/env";
-import { requestLogger, logger } from "@/common/middleware/requestLogger";
+import { logger, requestLogger } from "@/common/middleware/requestLogger";
 
 const app = express();
 
