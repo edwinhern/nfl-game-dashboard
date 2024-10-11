@@ -1,7 +1,7 @@
 import express from "express";
 
-import db from "@/config/database";
-import env from "@/config/env";
+import env from "@/env";
+import db from "@/lib/database";
 import { logger, requestLogger } from "@/logger";
 
 const app = express();
