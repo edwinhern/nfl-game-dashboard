@@ -1,4 +1,4 @@
-import type { EventParams, ParsedEvent, TicketmasterResponse } from "@/lib/ticketmaster/types";
+import type { EventParams, ParsedEvent, TicketmasterEvent, TicketmasterResponse } from "@/lib/ticketmaster/types";
 import { formatDate, parseEvents } from "@/lib/ticketmaster/utils";
 import { logger } from "@/logger";
 
@@ -16,8 +16,7 @@ class TicketmasterAPI {
 		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	private async request(endpoint: string, params: Record<string, any> = {}): Promise<any> {
+	private async request(endpoint: string, params: Record<string, unknown> = {}): Promise<unknown> {
 		const now = Date.now();
 		const timeToWait = this.requestInterval - (now - this.lastRequestTime);
 		if (timeToWait > 0) {
@@ -54,12 +53,12 @@ class TicketmasterAPI {
 			endDateTime: formatDate(params.endDateTime),
 		};
 
-		const response: TicketmasterResponse = await this.request("/events", nflParams);
+		const response = (await this.request("/events", nflParams)) as TicketmasterResponse;
 		return parseEvents(response._embedded?.events || []);
 	}
 
 	async getEvent(id: string): Promise<ParsedEvent> {
-		const response = await this.request(`/events/${id}`);
+		const response = (await this.request(`/events/${id}`)) as TicketmasterEvent;
 		return parseEvents([response])[0];
 	}
 
