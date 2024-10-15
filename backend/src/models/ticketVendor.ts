@@ -5,7 +5,7 @@ export interface TicketVendorTable {
 	id: Generated<UUID>;
 	name: string;
 	created_at: Generated<Date>;
-	modified_at: ColumnType<Date, string, never>;
+	updated_at: ColumnType<Date | null, string | null, never>;
 }
 
 export type TicketVendor = Selectable<TicketVendorTable>;

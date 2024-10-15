@@ -11,4 +11,5 @@ export default cleanEnv(process.env, {
 	HOST: host({ desc: "The host to start the server on" }),
 	PORT: port({ desc: "The port to start the server on" }),
 	DATABASE_URL: str({ desc: "The URL to the database" }),
+	TICKETMASTER_API_KEY: str({ desc: "The API key for the Ticketmaster API" }),
 });

@@ -1,5 +1,5 @@
 import type { UUID } from "node:crypto";
-import type { ColumnType, Generated, Selectable } from "kysely";
+import type { ColumnType, Generated, Insertable, Selectable, Updateable } from "kysely";
 
 export type GameStatus = "onsale" | "presale" | "active" | "inactive" | "cancelled" | "rescheduled" | "offsale";
 
@@ -21,5 +21,5 @@ export interface GameTable {
 }
 
 export type Game = Selectable<GameTable>;
-export type InsertGame = GameTable;
-export type UpdateGame = GameTable;
+export type InsertGame = Insertable<GameTable>;
+export type UpdateGame = Updateable<GameTable>;
