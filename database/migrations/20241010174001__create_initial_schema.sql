@@ -4,7 +4,7 @@
  * Description: Creates tables for NFL ticket system
  * Branch: feat-backend-setup
  */
-
+ 
 CREATE TABLE ticket_vendors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL
@@ -36,6 +36,7 @@ CREATE TYPE game_status AS ENUM ('onsale', 'presale', 'active', 'inactive', 'can
 CREATE TABLE games (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(255) NOT NULL,
+    event_id VARCHAR(255) UNIQUE NOT NULL,
     stadium_id UUID REFERENCES stadiums(id) NOT NULL,
     ticket_vendor_id UUID REFERENCES ticket_vendors(id) NOT NULL,
     start_date TIMESTAMP NOT NULL,
@@ -43,9 +44,11 @@ CREATE TABLE games (
     presale_date TIMESTAMP,
     onsale_date TIMESTAMP,
     offsale_date TIMESTAMP,
-    min_price INTEGER,
-    max_price INTEGER,
-    status game_status NOT NULL
+    min_price DECIMAL(10,2),
+    max_price DECIMAL(10,2),
+    status game_status NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE game_teams (

@@ -38,8 +38,6 @@ export class DataSyncService {
 				if (this.isEventValid(event)) {
 					await this.upsertGame(event);
 					logger.info(`Syncing event: ${event.id}, ${event.name}`);
-				} else {
-					logger.warn(`Skipping event with unmapped data: ${event.id}`);
 				}
 			}
 		} catch (error) {
@@ -58,12 +56,21 @@ export class DataSyncService {
 	private isEventValid(event: ParsedEvent): boolean {
 		// Check if venue exists in database
 		if (!event.stadium_name || !this.mappedStadiums.has(event.stadium_name)) {
+			logger.warn(`Event ${event.id}: Invalid stadium name '${event.stadium_name}'`);
 			return false;
 		}
 
 		// Check if all teams exist in database
-		if (event.team_names?.some((teamName) => !this.mappedTeams.has(teamName))) {
+		if (!event.team_names || event.team_names.length === 0) {
+			logger.warn(`Event ${event.id}: No teams found`);
 			return false;
+		}
+
+		for (const teamName of event.team_names) {
+			if (!this.mappedTeams.has(teamName)) {
+				logger.warn(`Event ${event.id}: Invalid team name '${teamName}'`);
+				return false;
+			}
 		}
 
 		return true;
@@ -100,7 +107,7 @@ export class DataSyncService {
 				offsale_date: event.offsale_date,
 			};
 
-			await gameRepository.upsertGame(db, gameData);
+			const upsertedGame = (await gameRepository.upsertGame(db, gameData)) as Game;
 
 			// Upsert teams
 			if (event.team_names && event.team_ids) {
@@ -111,10 +118,8 @@ export class DataSyncService {
 						continue;
 					}
 
-					const game = (await gameRepository.findByName(db, event.name)) as Game;
-					// We need to get gameId from the database based on the event name
 					const gameTeamData: InsertGameTeam = {
-						game_id: game.id,
+						game_id: upsertedGame.id,
 						team_id: team.id,
 					};
 

@@ -5,6 +5,7 @@
 - Use typescript, thinking of using Node.js
 - Use `tsx`, `vitest`, `axios`, `dotenv`, `envalid`, `http-status-codes`
 - `biomejs/biome`, `supertest`.
+- Add `created_at` and `updated_at` to tables to see any changes
 
 
 ## Naming conventions:
