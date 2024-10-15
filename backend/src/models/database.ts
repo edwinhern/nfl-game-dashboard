@@ -11,7 +11,7 @@ export interface Database {
 	stadiums: StadiumTable;
 	teams: TeamTable;
 	games: GameTable;
-	games_teams: GameTeamTable;
+	game_teams: GameTeamTable;
 }
 
 export type DBInstance = Kysely<Database>;

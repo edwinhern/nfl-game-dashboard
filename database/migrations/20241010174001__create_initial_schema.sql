@@ -1,3 +1,9 @@
+/*
+ * Name: Create Initial Schema
+ * Author: Edwin Hernandez
+ * Description: Creates tables for NFL ticket system
+ * Branch: feat-backend-setup
+ */
 
 CREATE TABLE ticket_vendors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

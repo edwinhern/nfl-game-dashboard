@@ -4,8 +4,6 @@ import type { ColumnType, Generated, Insertable, Selectable, Updateable } from "
 export interface GameTeamTable {
 	game_id: Generated<UUID>;
 	team_id: Generated<UUID>;
-	created_at: Generated<Date>;
-	modified_at: ColumnType<Date, string, never>;
 }
 
 export type GameTeam = Selectable<GameTeamTable>;

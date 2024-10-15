@@ -1,3 +1,10 @@
+/*
+ * Name: Seed Initial Data
+ * Author: Edwin Hernandez
+ * Description: Inserts sample data into NFL database
+ * Branch: feat-backend-setup
+ */
+
 INSERT INTO ticket_vendors (name)
 VALUES ('Ticketmaster');
 

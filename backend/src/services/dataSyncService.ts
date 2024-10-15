@@ -3,6 +3,10 @@ import db from "@/lib/database";
 import TicketmasterAPI from "@/lib/ticketmaster";
 import type { ParsedEvent } from "@/lib/ticketmaster/types";
 import { logger } from "@/logger";
+import type { Game, InsertGame } from "@/models/game";
+import type { InsertGameTeam } from "@/models/gameTeam";
+import * as gameRepository from "@/repositories/gameRepository";
+import * as gameTeamRepository from "@/repositories/gameTeamRepository";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
 import * as ticketVendorRepository from "@/repositories/ticketVendorRepository";
@@ -32,7 +36,7 @@ export class DataSyncService {
 
 			for (const event of events) {
 				if (this.isEventValid(event)) {
-					// Do something with the event
+					await this.upsertGame(event);
 					logger.info(`Syncing event: ${event.id}, ${event.name}`);
 				} else {
 					logger.warn(`Skipping event with unmapped data: ${event.id}`);
@@ -66,21 +70,59 @@ export class DataSyncService {
 	}
 
 	private async upsertGame(event: ParsedEvent): Promise<void> {
-		// Implement upsert logic here
+		try {
+			// Get stadium ID from database
+			const stadium = await stadiumRepository.findByName(db, event.stadium_name as string);
+			if (!stadium) {
+				logger.warn(`Stadium not found: ${event.stadium_name}`);
+				return;
+			}
 
-		// Get stadium ID from database
-		const stadium = await stadiumRepository.findByName(db, event.stadium_name as string);
-		if (!stadium) {
-			logger.warn(`Stadium not found: ${event.stadium_name}`);
-			return;
-		}
+			// Get ticket vendor ID from database - For example, Ticketmaster
+			// If we need to map from API, it may be inside `promoter` field
+			const ticketVendor = await ticketVendorRepository.findByName(db, "Ticketmaster");
+			if (!ticketVendor) {
+				logger.warn(`Ticket vendor not found: ${event}`);
+				return;
+			}
 
-		// Get ticket vendor ID from database - For example, Ticketmaster
-		// If we need to map from API, it may be inside `promoter` field
-		const ticketVendor = await ticketVendorRepository.findByName(db, "Ticketmaster");
-		if (!ticketVendor) {
-			logger.warn(`Ticket vendor not found: ${event}`);
-			return;
+			const gameData: InsertGame = {
+				name: event.name,
+				stadium_id: stadium.id,
+				ticket_vendor_id: ticketVendor.id,
+				start_date: event.start_date,
+				end_date: event.end_date,
+				status: event.status,
+				min_price: event.min_price,
+				max_price: event.max_price,
+				presale_date: event.presale_date,
+				onsale_date: event.onsale_date,
+				offsale_date: event.offsale_date,
+			};
+
+			await gameRepository.upsertGame(db, gameData);
+
+			// Upsert teams
+			if (event.team_names && event.team_ids) {
+				for (const teamName of event.team_names) {
+					const team = await teamRepository.findByName(db, teamName);
+					if (!team) {
+						logger.warn(`Team not found: ${teamName}`);
+						continue;
+					}
+
+					const game = (await gameRepository.findByName(db, event.name)) as Game;
+					// We need to get gameId from the database based on the event name
+					const gameTeamData: InsertGameTeam = {
+						game_id: game.id,
+						team_id: team.id,
+					};
+
+					await gameTeamRepository.upsertGameTeam(db, gameTeamData);
+				}
+			}
+		} catch (error) {
+			logger.error(`Error upserting game ${event.id}:`, error);
 		}
 	}
 }
