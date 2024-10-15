@@ -6,6 +6,7 @@ export type GameStatus = "onsale" | "presale" | "active" | "inactive" | "cancell
 export interface GameTable {
 	id: Generated<UUID>;
 	name: string;
+	event_id: string;
 	stadium_id: UUID;
 	ticket_vendor_id: UUID;
 	start_date: Date;
@@ -16,6 +17,8 @@ export interface GameTable {
 	min_price: number | null;
 	max_price: number | null;
 	status: GameStatus;
+	created_at: Generated<Date>;
+	updated_at?: Generated<Date>;
 }
 
 export type Game = Selectable<GameTable>;
