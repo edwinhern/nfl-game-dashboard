@@ -5,6 +5,7 @@ import type { ParsedEvent } from "@/lib/ticketmaster/types";
 import { logger } from "@/logger";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
+import * as ticketVendorRepository from "@/repositories/ticketVendorRepository";
 
 export class DataSyncService {
 	private ticketmasterAPI: TicketmasterAPI;
@@ -62,5 +63,24 @@ export class DataSyncService {
 		}
 
 		return true;
+	}
+
+	private async upsertGame(event: ParsedEvent): Promise<void> {
+		// Implement upsert logic here
+
+		// Get stadium ID from database
+		const stadium = await stadiumRepository.findByName(db, event.stadium_name as string);
+		if (!stadium) {
+			logger.warn(`Stadium not found: ${event.stadium_name}`);
+			return;
+		}
+
+		// Get ticket vendor ID from database - For example, Ticketmaster
+		// If we need to map from API, it may be inside `promoter` field
+		const ticketVendor = await ticketVendorRepository.findByName(db, "Ticketmaster");
+		if (!ticketVendor) {
+			logger.warn(`Ticket vendor not found: ${event}`);
+			return;
+		}
 	}
 }

@@ -3,6 +3,7 @@ import express from "express";
 import env from "@/env";
 import { logger, requestLogger } from "@/logger";
 import TicketmasterAPI from "./lib/ticketmaster/";
+import { DataSyncService } from "./services/dataSyncService";
 
 const app = express();
 
@@ -38,6 +39,13 @@ app.get("/", async (_req: express.Request, res: express.Response) => {
 			message: error instanceof Error ? error.message : "An unknown error occurred",
 		});
 	}
+});
+
+app.get("/sync", async (_req: express.Request, res: express.Response) => {
+	const dataSyncService = new DataSyncService();
+	await dataSyncService.syncGames();
+
+	res.json({ status: "Syncing games" });
 });
 
 app.listen(env.PORT, () => {
