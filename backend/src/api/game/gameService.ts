@@ -1,10 +1,13 @@
 import type { UUID } from "node:crypto";
+import { StatusCodes } from "http-status-codes";
+
 import type { GameFilterParams, GameQueryResult, RawGameQueryResult } from "@/api/game/";
 import { logger } from "@/logger";
 import type { DBInstance } from "@/models/database";
 import type { GameStatus } from "@/models/entities/game";
 import type { Stadium } from "@/models/entities/stadium";
 import type { Team } from "@/models/entities/team";
+import { ServiceResponse } from "@/models/serviceResponse";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
 
@@ -26,32 +29,36 @@ export class GameService {
 		this.db = database;
 	}
 
-	async getGames(filter: GameFilterParams): Promise<GameQueryResult[]> {
+	async getGames(filter: GameFilterParams): Promise<ServiceResponse<GameQueryResult[]>> {
 		try {
 			const query = this.buildQuery(filter);
 			const results = (await query.execute()) as RawGameQueryResult[];
-			return this.formatResults(results);
+			const formatResults = this.formatResults(results);
+
+			return ServiceResponse.success("Games retrieved successfully", formatResults);
 		} catch (error) {
 			logger.error("Error fetching games:", error);
-			throw new Error("Failed to fetch games");
+			return ServiceResponse.failure("Failed to fetch games", [], StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	async getTeams(): Promise<Team[]> {
+	async getTeams(): Promise<ServiceResponse<Team[]>> {
 		try {
-			return await teamRepository.findAll(this.db);
+			const teams = await teamRepository.findAll(this.db);
+			return ServiceResponse.success("Teams retrieved successfully", teams);
 		} catch (error) {
 			logger.error("Error fetching teams:", error);
-			throw new Error("Failed to fetch teams");
+			return ServiceResponse.failure("Failed to fetch teams", [], StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	async getStadiums(): Promise<Stadium[]> {
+	async getStadiums(): Promise<ServiceResponse<Stadium[]>> {
 		try {
-			return await stadiumRepository.findAll(this.db);
+			const stadiums = await stadiumRepository.findAll(this.db);
+			return ServiceResponse.success("Stadiums retrieved successfully", stadiums);
 		} catch (error) {
 			logger.error("Error fetching stadiums:", error);
-			throw new Error("Failed to fetch stadiums");
+			return ServiceResponse.failure("Failed to fetch stadiums", [], StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 	}
 

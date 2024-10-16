@@ -1,7 +1,10 @@
+import { StatusCodes } from "http-status-codes";
+
 import { GameService } from "@/api/game/gameService";
 import type { DBInstance } from "@/models/database";
 import type { Stadium } from "@/models/entities/stadium";
 import type { Team } from "@/models/entities/team";
+import type { ServiceResponse } from "@/models/serviceResponse";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
 
@@ -33,10 +36,15 @@ describe("GameService", () => {
 			vi.mocked(teamRepository.findAll).mockResolvedValue(mockTeams);
 
 			// Act
-			const result = await gameService.getTeams();
+			const result: ServiceResponse<Team[]> = await gameService.getTeams();
 
 			// Assert
-			expect(result).toEqual(mockTeams);
+			expect(result).toEqual({
+				statusCode: StatusCodes.OK,
+				success: true,
+				message: "Teams retrieved successfully",
+				responseObject: mockTeams,
+			});
 		});
 	});
 
@@ -60,10 +68,15 @@ describe("GameService", () => {
 			vi.mocked(stadiumRepository.findAll).mockResolvedValue(mockStadiums);
 
 			// Act
-			const result = await gameService.getStadiums();
+			const result: ServiceResponse<Stadium[]> = await gameService.getStadiums();
 
 			// Assert
-			expect(result).toEqual(mockStadiums);
+			expect(result).toEqual({
+				statusCode: StatusCodes.OK,
+				success: true,
+				message: "Stadiums retrieved successfully",
+				responseObject: mockStadiums,
+			});
 		});
 	});
 });
