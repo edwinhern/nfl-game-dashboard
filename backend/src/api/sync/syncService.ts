@@ -1,6 +1,7 @@
 import type { UUID } from "node:crypto";
 import cronParser from "cron-parser";
 
+import { MIN_TEAMS_PER_EVENT } from "@/api/sync";
 import env from "@/env";
 import db from "@/lib/database";
 import type TicketmasterAPI from "@/lib/ticketmaster";
@@ -108,9 +109,11 @@ export class SyncService {
 			return false;
 		}
 
-		// Check if all teams exist in database
-		if (!event.team_names || event.team_names.length === 0) {
-			logger.warn(`Event ${event.id}: No teams found`);
+		// Check if all teams exist in database and there are at least two teams
+		if (!event.team_names || event.team_names.length < MIN_TEAMS_PER_EVENT) {
+			logger.warn(
+				`Event ${event.id}: Insufficient number of teams. Found ${event.team_names?.length ?? 0}, required ${MIN_TEAMS_PER_EVENT}`,
+			);
 			return false;
 		}
 
