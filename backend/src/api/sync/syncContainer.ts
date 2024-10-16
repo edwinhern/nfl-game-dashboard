@@ -1,6 +1,7 @@
-import { SyncController, SyncService } from "@/api/sync";
 import env from "@/env";
 import TicketmasterAPI from "@/lib/ticketmaster";
+import { SyncController } from "./syncController";
+import { SyncService } from "./syncService";
 
 export class SyncContainer {
 	private static instance: SyncContainer;
