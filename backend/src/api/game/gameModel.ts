@@ -17,6 +17,7 @@ export interface GameQueryResult {
 	status: GameStatus;
 	min_price: number | null;
 	max_price: number | null;
+	stadium_id: UUID;
 	team_names: string[];
 }
 
