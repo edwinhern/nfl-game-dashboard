@@ -12,4 +12,5 @@ export default cleanEnv(process.env, {
 	PORT: port({ desc: "The port to start the server on" }),
 	DATABASE_URL: str({ desc: "The URL to the database" }),
 	TICKETMASTER_API_KEY: str({ desc: "The API key for the Ticketmaster API" }),
+	SYNC_SCHEDULE: str({ desc: "The cron schedule for syncing games" }),
 });

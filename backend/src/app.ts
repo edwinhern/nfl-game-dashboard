@@ -1,4 +1,6 @@
+import cronParser from "cron-parser";
 import express from "express";
+import cron from "node-cron";
 
 import env from "@/env";
 import { logger, requestLogger } from "@/logger";
@@ -13,39 +15,30 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 // Routes
-app.get("/", async (_req: express.Request, res: express.Response) => {
-	const api = new TicketmasterAPI(env.TICKETMASTER_API_KEY);
 
-	try {
-		const oneMonthFromNow = new Date();
-		oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-
-		const events = await api.getNFLEvents({
-			startDateTime: new Date(),
-			endDateTime: oneMonthFromNow,
-			size: "5",
-		});
-
-		res.json({
-			status: "API is running on /api",
-			eventCount: events.length,
-			firstEventName: events[0]?.name || "No events found",
-			events,
-		});
-	} catch (error) {
-		logger.error("Error fetching events:", error);
-		res.status(500).json({
-			status: "Error",
-			message: error instanceof Error ? error.message : "An unknown error occurred",
-		});
-	}
-});
-
-app.get("/sync", async (_req: express.Request, res: express.Response) => {
+app.get("/test-sync", async (_req: express.Request, res: express.Response) => {
+	logger.info("Manual sync triggered");
 	const dataSyncService = new DataSyncService();
 	await dataSyncService.syncGames();
 
-	res.json({ status: "Syncing games" });
+	res.json({ status: "Manual sync completed" });
+});
+
+app.get("/next-sync", (_req: express.Request, res: express.Response) => {
+	const interval = cronParser.parseExpression(env.SYNC_SCHEDULE);
+	const nextRun = interval.next().toDate();
+	res.json({ nextSync: nextRun });
+});
+
+cron.schedule(env.SYNC_SCHEDULE, async () => {
+	logger.info("Starting scheduled game sync");
+
+	const dataSyncService = new DataSyncService();
+	await dataSyncService.syncGames().catch((error) => {
+		logger.error("Scheduled sync failed:", error);
+	});
+
+	logger.info("Scheduled sync completed");
 });
 
 app.listen(env.PORT, () => {

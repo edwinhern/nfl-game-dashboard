@@ -1,4 +1,10 @@
-import type { EventParams, ParsedEvent, TicketmasterEvent, TicketmasterResponse } from "@/lib/ticketmaster/types";
+import type {
+	EventParams,
+	NFLEventResult,
+	ParsedEvent,
+	TicketmasterEvent,
+	TicketmasterResponse,
+} from "@/lib/ticketmaster/types";
 import { formatDate, parseEvents } from "@/lib/ticketmaster/utils";
 import { logger } from "@/logger";
 
@@ -42,7 +48,7 @@ class TicketmasterAPI {
 		}
 	}
 
-	async getNFLEvents(params: EventParams): Promise<ParsedEvent[]> {
+	async getNFLEvents(params: EventParams): Promise<NFLEventResult> {
 		const nflParams = {
 			classificationName: "Football",
 			subGenreId: "KZazBEonSMnZfZ7vFE1", // NFL subgenre ID
@@ -54,7 +60,16 @@ class TicketmasterAPI {
 		};
 
 		const response = (await this.request("/events", nflParams)) as TicketmasterResponse;
-		return parseEvents(response._embedded?.events || []);
+		const parsedEvents = parseEvents(response._embedded?.events || []);
+
+		return {
+			events: parsedEvents,
+			pagination: {
+				totalPages: response.page.totalPages,
+				currentPage: response.page.number,
+				totalElements: response.page.totalElements,
+			},
+		};
 	}
 
 	async getEvent(id: string): Promise<ParsedEvent> {

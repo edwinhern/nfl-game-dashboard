@@ -1,3 +1,6 @@
+import type { UUID } from "node:crypto";
+import cronParser from "cron-parser";
+
 import env from "@/env";
 import db from "@/lib/database";
 import TicketmasterAPI from "@/lib/ticketmaster";
@@ -13,13 +16,13 @@ import * as ticketVendorRepository from "@/repositories/ticketVendorRepository";
 
 export class DataSyncService {
 	private ticketmasterAPI: TicketmasterAPI;
-	private mappedTeams: Set<string>;
-	private mappedStadiums: Set<string>;
+	private mappedTeams: Map<string, UUID>; // teamName : teamID (UUID)
+	private mappedStadiums: Map<string, UUID>; // stadiumName : stadiumID (UUID)
 
 	constructor(apiKey: string = env.TICKETMASTER_API_KEY) {
 		this.ticketmasterAPI = new TicketmasterAPI(apiKey);
-		this.mappedTeams = new Set();
-		this.mappedStadiums = new Set();
+		this.mappedTeams = new Map();
+		this.mappedStadiums = new Map();
 	}
 
 	public async syncGames(): Promise<void> {
@@ -29,28 +32,41 @@ export class DataSyncService {
 			const oneMonthFromNow = new Date();
 			oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
 
-			const events = await this.ticketmasterAPI.getNFLEvents({
-				startDateTime: new Date(),
-				endDateTime: oneMonthFromNow,
-			});
+			let page = 0;
+			let totalPages = 1;
 
-			for (const event of events) {
-				if (this.isEventValid(event)) {
-					await this.upsertGame(event);
-					logger.info(`Syncing event: ${event.id}, ${event.name}`);
+			while (page < totalPages) {
+				const result = await this.ticketmasterAPI.getNFLEvents({
+					startDateTime: new Date(),
+					endDateTime: oneMonthFromNow,
+					page: page.toString(),
+				});
+
+				totalPages = result.pagination.totalPages;
+				page++;
+
+				for (const event of result.events) {
+					if (this.isEventValid(event)) {
+						await this.upsertGame(event);
+						logger.info(`Syncing event: ${event.id}, ${event.name}`);
+					}
 				}
+
+				logger.info(`Processed page ${page} of ${totalPages}`);
 			}
+
+			logger.info("Game sync completed successfully");
 		} catch (error) {
 			logger.error("Error syncing games from Ticketmaster:", error);
 		}
 	}
 
 	private async loadMappedEntities(): Promise<void> {
-		const teamNames = await teamRepository.findAllNames(db);
-		const stadiumNames = await stadiumRepository.findAllNames(db);
+		const teamNames = await teamRepository.findAll(db);
+		const stadiumNames = await stadiumRepository.findAll(db);
 
-		this.mappedTeams = new Set(teamNames);
-		this.mappedStadiums = new Set(stadiumNames);
+		this.mappedTeams = new Map(teamNames.map((team) => [team.name, team.id]));
+		this.mappedStadiums = new Map(stadiumNames.map((stadium) => [stadium.name, stadium.id]));
 	}
 
 	private isEventValid(event: ParsedEvent): boolean {
@@ -76,11 +92,22 @@ export class DataSyncService {
 		return true;
 	}
 
+	private shouldUpdateGame(lastUpdateTime: Date): boolean {
+		try {
+			const interval = cronParser.parseExpression(env.SYNC_SCHEDULE);
+			const lastScheduledRun = interval.prev().toDate();
+			return lastUpdateTime <= lastScheduledRun;
+		} catch (error) {
+			logger.error(`Error parsing cron expression: ${error}`);
+			return true;
+		}
+	}
+
 	private async upsertGame(event: ParsedEvent): Promise<void> {
 		try {
 			// Get stadium ID from database
-			const stadium = await stadiumRepository.findByName(db, event.stadium_name as string);
-			if (!stadium) {
+			const stadiumId = this.mappedStadiums.get(event.stadium_name as string);
+			if (!stadiumId) {
 				logger.warn(`Stadium not found: ${event.stadium_name}`);
 				return;
 			}
@@ -93,9 +120,17 @@ export class DataSyncService {
 				return;
 			}
 
+			// Check if game needs to be updated
+			const existingGame = await gameRepository.findByEventId(db, event.id);
+			if (existingGame?.updated_at && !this.shouldUpdateGame(existingGame.updated_at)) {
+				logger.info(`Skipping update for game ${event.id}: Recently updated`);
+				return;
+			}
+
 			const gameData: InsertGame = {
 				name: event.name,
-				stadium_id: stadium.id,
+				event_id: event.id,
+				stadium_id: stadiumId,
 				ticket_vendor_id: ticketVendor.id,
 				start_date: event.start_date,
 				end_date: event.end_date,
@@ -110,17 +145,17 @@ export class DataSyncService {
 			const upsertedGame = (await gameRepository.upsertGame(db, gameData)) as Game;
 
 			// Upsert teams
-			if (event.team_names && event.team_ids) {
+			if (upsertedGame && event.team_names) {
 				for (const teamName of event.team_names) {
-					const team = await teamRepository.findByName(db, teamName);
-					if (!team) {
+					const teamId = this.mappedTeams.get(teamName);
+					if (!teamId) {
 						logger.warn(`Team not found: ${teamName}`);
 						continue;
 					}
 
 					const gameTeamData: InsertGameTeam = {
 						game_id: upsertedGame.id,
-						team_id: team.id,
+						team_id: teamId,
 					};
 
 					await gameTeamRepository.upsertGameTeam(db, gameTeamData);

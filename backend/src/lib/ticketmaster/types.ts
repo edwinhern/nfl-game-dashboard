@@ -83,4 +83,14 @@ export interface EventParams {
 	keyword?: string;
 	status?: string;
 	size?: string;
+	page?: string;
+}
+
+export interface NFLEventResult {
+	events: ParsedEvent[];
+	pagination: {
+		totalPages: number;
+		currentPage: number;
+		totalElements: number;
+	};
 }

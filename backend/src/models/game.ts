@@ -18,7 +18,7 @@ export interface GameTable {
 	max_price: number | null;
 	status: GameStatus;
 	created_at: Generated<Date>;
-	updated_at?: Generated<Date>;
+	updated_at: Generated<Date>;
 }
 
 export type Game = Selectable<GameTable>;
