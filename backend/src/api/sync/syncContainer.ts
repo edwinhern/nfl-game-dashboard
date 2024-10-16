@@ -1,7 +1,5 @@
+import { SyncController, SyncService } from "@/api/sync";
 import env from "@/env";
-
-import { SyncController } from "@/api/sync/syncController";
-import { SyncService } from "@/api/sync/syncService";
 import TicketmasterAPI from "@/lib/ticketmaster";
 
 export class SyncContainer {

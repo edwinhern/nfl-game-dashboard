@@ -1,9 +1,9 @@
 import cronParser from "cron-parser";
 import type { Request, Response } from "express";
 
+import type { SyncService } from "@/api/sync/syncService";
 import env from "@/env";
 import { logger } from "@/logger";
-import type { SyncService } from "./syncService";
 
 export class SyncController {
 	private syncService: SyncService;

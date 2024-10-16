@@ -1,7 +1,6 @@
 import { Router } from "express";
 
-import { syncContainer } from "./syncContainer";
-import type { SyncController } from "./syncController";
+import { type SyncController, syncContainer } from "@/api/sync";
 
 export const createSyncRoutes = (): Router => {
 	const router = Router();
