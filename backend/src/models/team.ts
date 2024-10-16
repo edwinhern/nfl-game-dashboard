@@ -1,5 +1,5 @@
 import type { UUID } from "node:crypto";
-import type { ColumnType, Generated, Insertable, Selectable, Updateable } from "kysely";
+import type { Generated, Insertable, Selectable, Updateable } from "kysely";
 
 export interface TeamTable {
 	id: Generated<UUID>;
@@ -7,8 +7,6 @@ export interface TeamTable {
 	city: string;
 	state: string;
 	country: string;
-	created_at: Generated<Date>;
-	modified_at: ColumnType<Date, string, never>;
 }
 
 export type Team = Selectable<TeamTable>;
