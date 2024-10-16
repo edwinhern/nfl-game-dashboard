@@ -1,6 +1,7 @@
 import express from "express";
 import cron from "node-cron";
 
+import { createGameRoutes } from "@/api/game";
 import { type SyncController, createSyncRoutes, syncContainer } from "@/api/sync";
 import env from "@/env";
 import { logger, requestLogger } from "@/logger";
@@ -14,6 +15,7 @@ app.use(requestLogger);
 
 // Routes
 app.use("/api/sync", createSyncRoutes());
+app.use("/api/games", createGameRoutes());
 
 // Cron job to sync data
 cron.schedule(env.SYNC_SCHEDULE, async () => {

@@ -154,7 +154,7 @@ export class SyncService {
 		// Check if game needs to be updated
 		const existingGame = await gameRepository.findByEventId(db, event.id);
 		if (existingGame?.updated_at && !this.shouldUpdateGame(existingGame.updated_at)) {
-			logger.info(`Skipping update for game ${event.id}: Recently updated`);
+			logger.warn(`Skipping update for game ${event.id}: Recently updated`);
 			return;
 		}
 
