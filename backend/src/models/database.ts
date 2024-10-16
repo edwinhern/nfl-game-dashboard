@@ -6,7 +6,7 @@ import type { StadiumTable } from "@/models/stadium";
 import type { TeamTable } from "@/models/team";
 import type { TicketVendorTable } from "@/models/ticketVendor";
 
-export interface Database {
+export interface DatabaseTable {
 	ticket_vendors: TicketVendorTable;
 	stadiums: StadiumTable;
 	teams: TeamTable;
@@ -14,4 +14,4 @@ export interface Database {
 	game_teams: GameTeamTable;
 }
 
-export type DBInstance = Kysely<Database>;
+export type DBInstance = Kysely<DatabaseTable>;

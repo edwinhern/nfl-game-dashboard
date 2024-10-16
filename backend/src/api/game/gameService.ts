@@ -1,7 +1,7 @@
 import type { UUID } from "node:crypto";
 import type { GameFilterParams, GameQueryResult, RawGameQueryResult } from "@/api/game/";
-import db from "@/lib/database";
 import { logger } from "@/logger";
+import type { DBInstance } from "@/models/database";
 import type { GameStatus } from "@/models/game";
 import type { Stadium } from "@/models/stadium";
 import type { Team } from "@/models/team";
@@ -20,6 +20,12 @@ const GAME_FIELDS = [
 ] as const;
 
 export class GameService {
+	private db: DBInstance;
+
+	constructor(database: DBInstance) {
+		this.db = database;
+	}
+
 	async getGames(filter: GameFilterParams): Promise<GameQueryResult[]> {
 		try {
 			const query = this.buildQuery(filter);
@@ -33,7 +39,7 @@ export class GameService {
 
 	async getTeams(): Promise<Team[]> {
 		try {
-			return await teamRepository.findAll(db);
+			return await teamRepository.findAll(this.db);
 		} catch (error) {
 			logger.error("Error fetching teams:", error);
 			throw new Error("Failed to fetch teams");
@@ -42,7 +48,7 @@ export class GameService {
 
 	async getStadiums(): Promise<Stadium[]> {
 		try {
-			return await stadiumRepository.findAll(db);
+			return await stadiumRepository.findAll(this.db);
 		} catch (error) {
 			logger.error("Error fetching stadiums:", error);
 			throw new Error("Failed to fetch stadiums");
@@ -50,7 +56,7 @@ export class GameService {
 	}
 
 	private buildQuery(filter: GameFilterParams) {
-		let query = db
+		let query = this.db
 			.selectFrom("games")
 			.leftJoin("game_teams", "games.id", "game_teams.game_id")
 			.leftJoin("teams", "game_teams.team_id", "teams.id")

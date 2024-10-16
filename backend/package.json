@@ -1,24 +1,24 @@
 {
 	"name": "parkhub-challenge-backend",
 	"version": "1.0.0",
-	"main": "./dist/app.js",
-	"module": "./dist/app.mjs",
-	"types": "./dist/app.d.ts",
+	"main": "./dist/main.js",
+	"module": "./dist/main.mjs",
+	"types": "./dist/main.d.ts",
 	"type": "module",
 	"exports": {
 		"require": {
-			"types": "./dist/app.d.cts",
-			"default": "./dist/app.cjs"
+			"types": "./dist/main.d.cts",
+			"default": "./dist/main.cjs"
 		},
 		"import": {
-			"types": "./dist/app.d.mts",
-			"default": "./dist/app.mjs"
+			"types": "./dist/main.d.mts",
+			"default": "./dist/main.mjs"
 		}
 	},
 	"scripts": {
-		"dev": "tsx watch --clear-screen=false src/app.ts",
+		"dev": "tsx watch --clear-screen=false src/main.ts",
 		"build": "pkgroll",
-		"start": "node dist/app.js",
+		"start": "node dist/main.js",
 		"test": "vitest run"
 	},
 	"dependencies": {
