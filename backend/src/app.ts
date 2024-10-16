@@ -1,7 +1,8 @@
 import express from "express";
+import cron from "node-cron";
 
+import { type SyncController, createSyncRoutes, syncContainer } from "@/api/sync";
 import env from "@/env";
-import db from "@/lib/database";
 import { logger, requestLogger } from "@/logger";
 
 const app = express();
@@ -12,12 +13,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 // Routes
-app.get("/", async (_req: express.Request, res: express.Response) => {
-	const vendors = await db.selectFrom("ticket_vendors").selectAll().execute();
-	res.json({ status: "API is running on /api", response: vendors });
+app.use("/api/sync", createSyncRoutes());
+
+// Cron job to sync data
+cron.schedule(env.SYNC_SCHEDULE, async () => {
+	const syncController = syncContainer.get<SyncController>("syncController");
+	syncController.scheduledSync().catch((error) => {
+		logger.error("Error in scheduled sync:", error);
+	});
 });
 
 app.listen(env.PORT, () => {
-	const { NODE_ENV, HOST, PORT } = env;
-	logger.info(`Server (${NODE_ENV}) running on port http://${HOST}:${PORT}`);
+	logger.info(`Server (${env.NODE_ENV}) running on port http://${env.HOST}:${env.PORT}`);
 });

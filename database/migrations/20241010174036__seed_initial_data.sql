@@ -1,3 +1,10 @@
+/*
+ * Name: Seed Initial Data
+ * Author: Edwin Hernandez
+ * Description: Inserts sample data into NFL database
+ * Branch: feat-backend-setup
+ */
+
 INSERT INTO ticket_vendors (name)
 VALUES ('Ticketmaster');
 
@@ -69,9 +76,9 @@ VALUES
 ('New England Patriots', 'Foxborough', 'MA', 'USA'),
 ('Washington Commanders', 'Landover', 'MD', 'USA');
 
-INSERT INTO games (name, stadium_id, start_date, end_date, onsale_date, offsale_date, status, ticket_vendor_id)
+INSERT INTO games (name, event_id, stadium_id, start_date, end_date, onsale_date, offsale_date, status, ticket_vendor_id)
 VALUES 
-('Tampa Bay Buccaneers vs. San Francisco 49ers', (SELECT id FROM stadiums WHERE name = 'Raymond James Stadium'), 
+('Tampa Bay Buccaneers vs. San Francisco 49ers', 'vvG1VZb69xPKSQ', (SELECT id FROM stadiums WHERE name = 'Raymond James Stadium'), 
 '2024-11-10T18:00:00Z', '2024-11-10T22:00:00Z', '2024-05-16T00:00:00Z', '2024-11-10T20:00:00Z', 'onsale', (SELECT id FROM ticket_vendors WHERE name = 'Ticketmaster'));
 
 INSERT INTO game_teams (game_id, team_id)
