@@ -1,7 +1,5 @@
-import { sql } from "kysely";
-
 import type { DBInstance } from "@/models/database";
-import type { Game, InsertGame } from "@/models/game";
+import type { Game, InsertGame } from "@/models/entities/game";
 
 export async function upsertGame(db: DBInstance, game: InsertGame): Promise<Game | undefined> {
 	return await db

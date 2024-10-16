@@ -1,5 +1,5 @@
 import type { UUID } from "node:crypto";
-import type { GameStatus } from "@/models/game";
+import type { GameStatus } from "@/models/entities/game";
 
 export interface GameFilterParams {
 	startDate?: Date;

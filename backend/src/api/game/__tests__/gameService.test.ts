@@ -1,7 +1,7 @@
 import { GameService } from "@/api/game/gameService";
 import type { DBInstance } from "@/models/database";
-import type { Stadium } from "@/models/stadium";
-import type { Team } from "@/models/team";
+import type { Stadium } from "@/models/entities/stadium";
+import type { Team } from "@/models/entities/team";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
 

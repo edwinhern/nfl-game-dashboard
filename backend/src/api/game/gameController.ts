@@ -3,9 +3,9 @@ import type { Request, Response } from "express";
 import type { UUID } from "node:crypto";
 import type { GameFilterParams, GameService } from "@/api/game";
 import { logger } from "@/logger";
-import type { GameStatus } from "@/models/game";
-import type { Stadium } from "@/models/stadium";
-import type { Team } from "@/models/team";
+import type { GameStatus } from "@/models/entities/game";
+import type { Stadium } from "@/models/entities/stadium";
+import type { Team } from "@/models/entities/team";
 
 export class GameController {
 	private gameService: GameService;

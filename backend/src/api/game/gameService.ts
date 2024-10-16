@@ -2,9 +2,9 @@ import type { UUID } from "node:crypto";
 import type { GameFilterParams, GameQueryResult, RawGameQueryResult } from "@/api/game/";
 import { logger } from "@/logger";
 import type { DBInstance } from "@/models/database";
-import type { GameStatus } from "@/models/game";
-import type { Stadium } from "@/models/stadium";
-import type { Team } from "@/models/team";
+import type { GameStatus } from "@/models/entities/game";
+import type { Stadium } from "@/models/entities/stadium";
+import type { Team } from "@/models/entities/team";
 import * as stadiumRepository from "@/repositories/stadiumRepository";
 import * as teamRepository from "@/repositories/teamRepository";
 
