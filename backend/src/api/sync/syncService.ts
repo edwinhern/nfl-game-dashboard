@@ -3,10 +3,10 @@ import cronParser from "cron-parser";
 
 import { MIN_TEAMS_PER_EVENT } from "@/api/sync";
 import env from "@/env";
-import db from "@/lib/database";
 import type TicketmasterAPI from "@/lib/ticketmaster";
 import type { ParsedEvent } from "@/lib/ticketmaster/types";
 import { logger } from "@/logger";
+import type { DBInstance } from "@/models/database";
 import type { Game, InsertGame } from "@/models/game";
 import type { InsertGameTeam } from "@/models/gameTeam";
 import * as gameRepository from "@/repositories/gameRepository";
@@ -17,11 +17,14 @@ import * as ticketVendorRepository from "@/repositories/ticketVendorRepository";
 
 export class SyncService {
 	private ticketmasterAPI: TicketmasterAPI;
+	private db: DBInstance;
 	private mappedTeams: Map<string, UUID>;
 	private mappedStadiums: Map<string, UUID>;
 
-	constructor(ticketmasterAPI: TicketmasterAPI) {
+	constructor(ticketmasterAPI: TicketmasterAPI, database: DBInstance) {
 		this.ticketmasterAPI = ticketmasterAPI;
+		this.db = database;
+
 		this.mappedTeams = new Map();
 		this.mappedStadiums = new Map();
 	}
@@ -54,7 +57,10 @@ export class SyncService {
 	private async loadMappedEntities(): Promise<void> {
 		logger.info("Loading mapped entities");
 		try {
-			const [teams, stadiums] = await Promise.all([teamRepository.findAll(db), stadiumRepository.findAll(db)]);
+			const [teams, stadiums] = await Promise.all([
+				teamRepository.findAll(this.db),
+				stadiumRepository.findAll(this.db),
+			]);
 
 			this.mappedTeams = new Map(teams.map((team) => [team.name, team.id]));
 			this.mappedStadiums = new Map(stadiums.map((stadium) => [stadium.name, stadium.id]));
@@ -148,14 +154,14 @@ export class SyncService {
 
 		// Get ticket vendor ID from database - For example, Ticketmaster
 		// If we need to map from API, it may be inside `promoter` field
-		const ticketVendor = await ticketVendorRepository.findByName(db, "Ticketmaster");
+		const ticketVendor = await ticketVendorRepository.findByName(this.db, "Ticketmaster");
 		if (!ticketVendor) {
 			logger.warn(`Ticket vendor not found: ${event}`);
 			return;
 		}
 
 		// Check if game needs to be updated
-		const existingGame = await gameRepository.findByEventId(db, event.id);
+		const existingGame = await gameRepository.findByEventId(this.db, event.id);
 		if (existingGame?.updated_at && !this.shouldUpdateGame(existingGame.updated_at)) {
 			logger.warn(`Skipping update for game ${event.id}: Recently updated`);
 			return;
@@ -176,7 +182,7 @@ export class SyncService {
 			offsale_date: event.offsale_date,
 		};
 
-		const upsertedGame = (await gameRepository.upsertGame(db, gameData)) as Game;
+		const upsertedGame = (await gameRepository.upsertGame(this.db, gameData)) as Game;
 
 		// Upsert teams
 		if (upsertedGame && event.team_names) {
@@ -192,7 +198,7 @@ export class SyncService {
 					team_id: teamId,
 				};
 
-				await gameTeamRepository.upsertGameTeam(db, gameTeamData);
+				await gameTeamRepository.upsertGameTeam(this.db, gameTeamData);
 			}
 		}
 	}
