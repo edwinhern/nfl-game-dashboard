@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import winston from "winston";
+import env from "./env";
 
 const { combine, timestamp, printf, colorize, align } = winston.format;
 
@@ -13,7 +14,7 @@ const logFormat = combine(
 export const logger = winston.createLogger({
 	level: "info",
 	format: logFormat,
-	transports: [new winston.transports.Console()],
+	transports: [new winston.transports.Console({ level: env.DEBUG_MODE ? "debug" : "info" })],
 });
 
 export const requestLogger = (req: Request, res: Response, next: NextFunction) => {

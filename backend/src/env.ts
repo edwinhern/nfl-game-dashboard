@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { cleanEnv, host, num, port, str } from "envalid";
+import { bool, cleanEnv, host, port, str } from "envalid";
 
 dotenv.config();
 
@@ -13,4 +13,5 @@ export default cleanEnv(process.env, {
 	DATABASE_URL: str({ desc: "The URL to the database" }),
 	TICKETMASTER_API_KEY: str({ desc: "The API key for the Ticketmaster API" }),
 	SYNC_SCHEDULE: str({ desc: "The cron schedule for syncing games" }),
+	DEBUG_MODE: bool({ desc: "Whether to enable debug mode" }),
 });
