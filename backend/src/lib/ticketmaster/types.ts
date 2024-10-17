@@ -1,4 +1,4 @@
-import type { GameStatus } from "@/models/game";
+import type { GameStatus } from "@/models/entities/game";
 
 export interface TicketmasterDates {
 	start: { dateTime: string };

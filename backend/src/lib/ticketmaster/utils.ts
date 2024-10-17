@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import { STATUS_MAP } from "@/lib/ticketmaster/constants";
 import type { ParsedEvent, TicketmasterEvent, TicketmasterSale } from "@/lib/ticketmaster/types";
-import type { GameStatus } from "@/models/game";
+import type { GameStatus } from "@/models/entities/game";
 
 export function parseEvents(events: TicketmasterEvent[]): ParsedEvent[] {
 	return _.map(events, parseEvent);

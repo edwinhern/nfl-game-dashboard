@@ -1,4 +1,4 @@
-import type { GameStatus } from "@/models/game";
+import type { GameStatus } from "@/models/entities/game";
 
 export const STATUS_MAP: Record<string, GameStatus> = {
 	onsale: "onsale",

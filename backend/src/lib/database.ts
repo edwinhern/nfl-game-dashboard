@@ -2,14 +2,33 @@ import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
 
 import env from "@/env";
-import type { Database } from "@/models/database";
+import { logger } from "@/logger";
+import type { DatabaseTable } from "@/models/database";
 
-const dialect = new PostgresDialect({
-	pool: new pg.Pool({
-		connectionString: env.DATABASE_URL,
-	}),
-});
+class Database {
+	private static instance: Kysely<DatabaseTable>;
 
-const database = new Kysely<Database>({ dialect });
+	private constructor() {}
 
-export default database;
+	public static getInstance(): Kysely<DatabaseTable> {
+		if (!Database.instance) {
+			try {
+				const dialect = new PostgresDialect({
+					pool: new pg.Pool({
+						connectionString: env.DATABASE_URL,
+					}),
+				});
+
+				Database.instance = new Kysely<DatabaseTable>({ dialect });
+
+				logger.info("Database instance created successfully");
+			} catch (error) {
+				logger.error("Error creating database instance:", error);
+			}
+		}
+
+		return Database.instance;
+	}
+}
+
+export default Database.getInstance();

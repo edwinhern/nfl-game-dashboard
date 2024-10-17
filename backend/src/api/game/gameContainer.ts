@@ -1,3 +1,4 @@
+import database from "@/lib/database";
 import { GameController } from "./gameController";
 import { GameService } from "./gameService";
 
@@ -6,7 +7,7 @@ export class GameContainer {
 	private services: Map<string, unknown> = new Map();
 
 	private constructor() {
-		const gameService = new GameService();
+		const gameService = new GameService(database);
 		const gameController = new GameController(gameService);
 
 		this.services.set("gameService", gameService);

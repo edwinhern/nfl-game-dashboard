@@ -1,12 +1,12 @@
 import type { Kysely } from "kysely";
 
-import type { GameTable } from "@/models/game";
-import type { GameTeamTable } from "@/models/gameTeam";
-import type { StadiumTable } from "@/models/stadium";
-import type { TeamTable } from "@/models/team";
-import type { TicketVendorTable } from "@/models/ticketVendor";
+import type { GameTable } from "@/models/entities/game";
+import type { GameTeamTable } from "@/models/entities/gameTeam";
+import type { StadiumTable } from "@/models/entities/stadium";
+import type { TeamTable } from "@/models/entities/team";
+import type { TicketVendorTable } from "@/models/entities/ticketVendor";
 
-export interface Database {
+export interface DatabaseTable {
 	ticket_vendors: TicketVendorTable;
 	stadiums: StadiumTable;
 	teams: TeamTable;
@@ -14,4 +14,4 @@ export interface Database {
 	game_teams: GameTeamTable;
 }
 
-export type DBInstance = Kysely<Database>;
+export type DBInstance = Kysely<DatabaseTable>;

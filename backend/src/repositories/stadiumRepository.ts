@@ -1,6 +1,6 @@
 import type { UUID } from "node:crypto";
 import type { DBInstance } from "@/models/database";
-import type { InsertStadium, Stadium, UpdateStadium } from "@/models/stadium";
+import type { InsertStadium, Stadium, UpdateStadium } from "@/models/entities/stadium";
 
 export async function findAll(db: DBInstance): Promise<Stadium[]> {
 	return db.selectFrom("stadiums").selectAll().execute();

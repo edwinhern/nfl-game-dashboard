@@ -1,4 +1,5 @@
 import env from "@/env";
+import database from "@/lib/database";
 import TicketmasterAPI from "@/lib/ticketmaster";
 import { SyncController } from "./syncController";
 import { SyncService } from "./syncService";
@@ -9,7 +10,7 @@ export class SyncContainer {
 
 	private constructor() {
 		const tickermasterAPI = new TicketmasterAPI(env.TICKETMASTER_API_KEY);
-		const syncService = new SyncService(tickermasterAPI);
+		const syncService = new SyncService(tickermasterAPI, database);
 		const syncController = new SyncController(syncService);
 
 		this.services.set("tickermasterAPI", tickermasterAPI);

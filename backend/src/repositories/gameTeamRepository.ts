@@ -1,6 +1,6 @@
 import type { UUID } from "node:crypto";
 import type { DBInstance } from "@/models/database";
-import type { GameTeam, InsertGameTeam } from "@/models/gameTeam";
+import type { GameTeam, InsertGameTeam } from "@/models/entities/gameTeam";
 
 export async function upsertGameTeam(db: DBInstance, gameTeam: InsertGameTeam): Promise<void> {
 	await db

@@ -1,5 +1,5 @@
 import type { UUID } from "node:crypto";
-import type { GameStatus } from "@/models/game";
+import type { GameStatus } from "@/models/entities/game";
 
 export interface GameFilterParams {
 	startDate?: Date;
@@ -17,6 +17,7 @@ export interface GameQueryResult {
 	status: GameStatus;
 	min_price: number | null;
 	max_price: number | null;
+	stadium_id: UUID;
 	team_names: string[];
 }
 
