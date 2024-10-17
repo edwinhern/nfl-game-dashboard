@@ -9,6 +9,7 @@ This document provides detailed information about the endpoints available in our
 Retrieves a list of games based on specified filters.
 
 #### Query Parameters:
+
 - `startDate`: ISO 8601 format (e.g., "2024-01-01T00:00:00Z")
 - `endDate`: ISO 8601 format
 - `teamId`: UUID of a team
@@ -16,6 +17,7 @@ Retrieves a list of games based on specified filters.
 - `status`: Game status (e.g., 'onsale', 'cancelled')
 
 #### Response:
+
 ```json
 {
   "success": true,
@@ -30,11 +32,8 @@ Retrieves a list of games based on specified filters.
       "min_price": "59.00",
       "max_price": "615.00",
       "stadium_id": "9963e477-6282-42c7-a4b3-e931cf32ed46",
-      "team_names": [
-        "Los Angeles Chargers",
-        "Tennessee Titans"
-      ]
-    },
+      "team_names": ["Los Angeles Chargers", "Tennessee Titans"]
+    }
     // ... more games
   ],
   "statusCode": 200
@@ -46,6 +45,7 @@ Retrieves a list of games based on specified filters.
 Retrieves a list of all teams in the system.
 
 #### Response:
+
 ```json
 {
   "success": true,
@@ -57,7 +57,7 @@ Retrieves a list of all teams in the system.
       "city": "Tampa",
       "state": "FL",
       "country": "US"
-    },
+    }
     // ... more teams
   ],
   "statusCode": 200
@@ -69,6 +69,7 @@ Retrieves a list of all teams in the system.
 Retrieves a list of all stadiums in the system.
 
 #### Response:
+
 ```json
 {
   "success": true,
@@ -85,7 +86,7 @@ Retrieves a list of all stadiums in the system.
       "timezone": "America/New_York",
       "lon": "-82.503474",
       "lat": "27.975976"
-    },
+    }
     // ... more stadiums
   ],
   "statusCode": 200
@@ -99,6 +100,7 @@ Retrieves a list of all stadiums in the system.
 Manually triggers a synchronization with the Ticketmaster API.
 
 #### Response:
+
 ```json
 {
   "success": true,
@@ -116,6 +118,7 @@ Manually triggers a synchronization with the Ticketmaster API.
 Retrieves the scheduled time for the next automatic synchronization.
 
 #### Response:
+
 ```json
 {
   "success": true,

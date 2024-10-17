@@ -36,6 +36,7 @@ We use Flyway for database migrations, following these conventions:
 3. Both schema changes and data migrations are managed through Flyway
 
 Example migration files:
+
 - `20241010174001__create_initial_schema.sql`: Creates the initial database schema
 - `20241010174036__seed_initial_data.sql`: Seeds the database with initial data
 

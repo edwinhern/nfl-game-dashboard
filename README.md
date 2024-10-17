@@ -4,7 +4,6 @@
 
 A robust backend system providing NFL game information synchronized with Ticketmaster's Discovery API.
 
-
 ## 📋 Overview
 
 The NFL Game Dashboard is a robust backend system that provides comprehensive game information synchronized with Ticketmaster's Discovery API. It offers a RESTful API for querying NFL game data and manages automated synchronization with external ticketing services.
@@ -41,28 +40,30 @@ To see an example of the project in action, you can view the demo video:
 
 ### Prerequisites
 
-- 🟢 Node.js (v22.9.0)
-- 📦 pnpm (Package manager) - [Installation guide](https://pnpm.io/installation)
 - 🐳 Docker and Docker Compose
 
 ## 🛠️ Setup Instructions
 
 1. 📥 Clone the repository:
+
    ```
    git clone https://github.com/edwinhern/nfl-game-dashboard.git
    cd nfl-game-dashboard
    ```
 
 2. 🔑 Set up environment variables:
+
    - Copy `backend/.env.template` to `backend/.env`
    - Update `backend/.env` with necessary values, including your Ticketmaster API key
 
 3. 🚀 Start the application using Docker Compose:
 
    - This command initializes the PostgreSQL database, executes Flyway migrations, and launches the backend server.
+
    ```
    docker-compose up --build
    ```
+
 ### 🖥️ Running Without Docker
 
 If you prefer to run the project without Docker:
