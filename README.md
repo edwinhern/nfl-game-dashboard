@@ -119,5 +119,6 @@ For manual synchronization, use the `/api/sync/testSync` endpoint.
 For more detailed information about the system components, please refer to:
 
 - 📘 [API Documentation](docs/API.md)
+- 📘 [API Curls Documentation](docs/API.md)
 - 🗄️ [Database Schema](docs/DATABASE.md)
 - 🏗️ [Backend Architecture](docs/BACKEND.md)
