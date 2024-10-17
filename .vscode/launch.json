@@ -5,29 +5,21 @@
 			"name": "Run in Development Mode",
 			"type": "node",
 			"request": "launch",
-			"cwd": "${workspaceFolder}/backend",
 			"runtimeExecutable": "npm",
 			"runtimeArgs": ["run", "dev"],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
-			"skipFiles": [
-				"<node_internals>/**",
-				"${workspaceFolder}/backend/node_modules/**"
-			]
+			"skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
 		},
 		{
 			"name": "Run in Production Mode",
 			"type": "node",
 			"request": "launch",
-			"cwd": "${workspaceFolder}/backend",
 			"runtimeExecutable": "npm",
 			"runtimeArgs": ["run", "start"],
 			"console": "integratedTerminal",
 			"internalConsoleOptions": "neverOpen",
-			"skipFiles": [
-				"<node_internals>/**",
-				"${workspaceFolder}/backend/node_modules/**"
-			],
+			"skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
 			"preLaunchTask": "npm: build"
 		}
 	]

@@ -27,17 +27,17 @@ services:
         condition: service_healthy
 
   backend:
-    build: ./backend
+    build: ./
     container_name: nfl_backend
     environment:
       DATABASE_URL: postgres://postgres:postgres@db:5432/nfldb
-      NODE_ENV: development
+      NODE_ENV: production
     ports:
       - "8080:8080"
     depends_on:
       - flyway
     volumes:
-      - ./backend:/app
+      - ./:/app
       - /app/node_modules
 volumes:
   postgres_data:

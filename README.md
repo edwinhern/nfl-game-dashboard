@@ -53,8 +53,8 @@ To see an example of the project in action, you can view the demo video:
 
 2. 🔑 Set up environment variables:
 
-   - Copy `backend/.env.template` to `backend/.env`
-   - Update `backend/.env` with necessary values, including your Ticketmaster API key
+   - Copy `.env.template` to `.env`
+   - Update `.env` with necessary values, including your Ticketmaster API key
 
 3. 🚀 Start the application using Docker Compose:
 
@@ -69,7 +69,7 @@ To see an example of the project in action, you can view the demo video:
 If you prefer to run the project without Docker:
 
 1. 🐘 Ensure you have a PostgreSQL instance running and accessible
-2. 🔗 Update the `DATABASE_URL` in `backend/.env` to point to your PostgreSQL instance
+2. 🔗 Update the `DATABASE_URL` in `.env` to point to your PostgreSQL instance
 3. 📂 Navigate to the backend directory: `cd backend`
 4. 📦 Install dependencies: `pnpm install`
 5. 🏃‍♂️ Run the development server: `pnpm run dev`
@@ -125,6 +125,6 @@ For manual synchronization, use the `/api/sync/testSync` endpoint.
 For more detailed information about the system components, please refer to:
 
 - 📘 [API Documentation](docs/API.md)
-- 📘 [API Curls Documentation](docs/API.md)
+- 📘 [API Curls Documentation](docs/API_CURLS.md)
 - 🗄️ [Database Schema](docs/DATABASE.md)
 - 🏗️ [Backend Architecture](docs/BACKEND.md)
