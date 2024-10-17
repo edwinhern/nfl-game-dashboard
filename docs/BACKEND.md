@@ -1,8 +1,18 @@
-# 🚀 Backend Documentation
+# NFL Game Ticket System Backend
 
 ## 📋 Overview
 
-This document outlines the backend architecture and implementation details of the NFL Game Ticket System. Our backend is built using Node.js with TypeScript, providing a robust and type-safe foundation for the API and data synchronization services.
+This project is a robust backend system for an NFL Game Ticket System. It provides APIs for game data retrieval and manages synchronization with external ticketing services. Built with Node.js and TypeScript, it offers a scalable and maintainable solution for handling NFL game ticket information.
+
+## 🌟 Main Features
+
+- RESTful API for querying NFL game data
+- Automated synchronization with Ticketmaster API
+- Flexible filtering options for game queries
+- Scalable database architecture using Kysely ORM
+- Scheduled tasks for data updates using node-cron
+- Comprehensive error handling and logging
+- Containerized deployment using Docker
 
 ## 🛠️ Technology Stack
 
@@ -10,18 +20,42 @@ This document outlines the backend architecture and implementation details of th
 - **TypeScript**: Typed superset of JavaScript
 - **Express**: Web application framework
 - **Kysely**: Type-safe SQL query builder
+- **PostgreSQL**: Relational database
 - **node-cron**: Task scheduler for periodic data synchronization
+- **Winston**: Logging library
 - **Vitest**: Testing framework
 - **Docker**: Containerization for consistent environments
 
-## 🚀 Scalability Considerations
+## 🚀 Getting Started
 
-- Implement caching for frequently accessed data (redis)
-- Use connection pooling for database connections
-- Implementing rate limiting for API endpoints
+### Prerequisites
 
-## 🔄 Data Synchronization
+- Node.js (v22.9.0)
+- pnpm (Package manager) (https://pnpm.io/installation)
 
-- Scheduled to run every 12 hours using node-cron
-- Implements incremental updates to minimize data transfer
-- Handles conflict resolution for data discrepancies
+### Setup Instructions
+
+#### Step 1: 🚀 Initial Setup
+
+- Clone the repository: `git clone https://github.com/edwinhern/nfl-game-dashboard.git`
+- Navigate: `cd express-typescript-2024`
+- Install dependencies: `pnpm i`
+
+#### Step 2: ⚙️ Environment Configuration
+
+- Create `.env`: Copy `.env.template` to `.env`
+- Update `.env`: Fill in necessary environment variables
+
+#### Step 3: 🏃‍♂️ Running the Project
+
+- Development Mode: `pnpm run dev`
+- Building: `pnpm run build`
+- Production Mode: Set `.env` to `NODE_ENV="production"` then `pnpm run build && pnpm run start`
+
+## 🧪 Testing
+
+The project uses Vitest for unit and integration testing. Test files are located alongside the source files with a `.test.ts` extension.
+
+## 📈 Logging
+
+Winston is used for logging. Logs are output to the console and can be configured for additional transports as needed.
