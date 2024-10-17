@@ -9,6 +9,11 @@ A robust backend system providing NFL game information synchronized with Ticketm
 
 The NFL Game Dashboard is a robust backend system that provides comprehensive game information synchronized with Ticketmaster's Discovery API. It offers a RESTful API for querying NFL game data and manages automated synchronization with external ticketing services.
 
+## 🎥 Project Demo
+
+To see an example of the project in action, you can view the demo video:
+[View Project Demo](https://photos.onedrive.com/share/814EB5940A8CC8AF!149046?cid=814EB5940A8CC8AF&resId=814EB5940A8CC8AF!149046&authkey=!AGSJl13Mt-p0s1Q&ithint=video&e=9kS8H1)
+
 ## 🌟 Key Features
 
 - 🚀 RESTful API for efficient querying of NFL game data
