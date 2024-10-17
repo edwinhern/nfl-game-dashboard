@@ -1,51 +1,72 @@
 # 🏈 Parkhub NFL Game Dashboard - Coding Challenge
 
 [![Build CI](https://github.com/edwinhern/nfl-game-dashboard/actions/workflows/backend-ci.yml/badge.svg?branch=main)](https://github.com/edwinhern/nfl-game-dashboard/actions/workflows/backend-ci.yml)[![Backend Code Quality](https://github.com/edwinhern/nfl-game-dashboard/actions/workflows/backend-code-quality.yml/badge.svg?branch=main)](https://github.com/edwinhern/nfl-game-dashboard/actions/workflows/backend-code-quality.yml)
+
+A robust backend system providing NFL game information synchronized with Ticketmaster's Discovery API.
+
+
 ## 📋 Overview
 
-This project implements a robust data layer for an NFL game dashboard, providing comprehensive game information synchronized with Ticketmaster's Discovery API. It consists of two primary services:
-
-1. 🔄 Data Synchronization and Importing Service
-2. 🚀 API for Retrieving Game Data
+The NFL Game Dashboard is a robust backend system that provides comprehensive game information synchronized with Ticketmaster's Discovery API. It offers a RESTful API for querying NFL game data and manages automated synchronization with external ticketing services.
 
 ## 🌟 Key Features
 
-- 🔥 RESTful API for efficient querying of NFL game data
-- ⏰ Automated synchronization with Ticketmaster API (every 12 hours)
-- 🐘 PostgreSQL database with Flyway migrations for version control
-- 🐳 Dockerized development environment for consistent setup and testing
+- 🚀 RESTful API for efficient querying of NFL game data
+- 🔄 Automated synchronization with Ticketmaster API (every 12 hours)
+- 🔍 Flexible filtering options for game queries
+- 🐘 Scalable database architecture using PostgreSQL and Kysely ORM
+- ⏰ Scheduled tasks for data updates using node-cron
 - 🚦 Comprehensive error handling and logging
-- 🧪 Unit tests demonstrating system functionality
+- 🐳 Dockerized development environment for consistent setup and testing
 
-## 🗂️ Project Structure
+## 🛠️ Technology Stack
 
-```
-.
-├── backend/             # Node.js backend application
-├── database/            # Database migrations and configuration
-├── docs/                # Additional documentation
-├── .github/             # GitHub Actions workflows
-├── docker-compose.yml   # Docker Compose configuration
-└── README.md            # This file
-```
+- 🟢 **Node.js** (v22.9.0): JavaScript runtime
+- 🔷 **TypeScript**: Typed superset of JavaScript
+- 🚂 **Express**: Web application framework
+- 🐘 **PostgreSQL**: Relational database
+- 🔑 **Kysely**: Type-safe SQL query builder
+- 🦋 **Flyway**: Database migration tool
+- ⏲️ **node-cron**: Task scheduler for periodic data synchronization
+- 📝 **Winston**: Logging library
+- 🧪 **Vitest**: Testing framework
+- 🐳 **Docker**: Containerization for consistent environments
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- 🟢 Node.js (v22.9.0)
+- 📦 pnpm (Package manager) - [Installation guide](https://pnpm.io/installation)
+- 🐳 Docker and Docker Compose
 
 ## 🛠️ Setup Instructions
 
-1. Clone the repository:
+1. 📥 Clone the repository:
    ```
    git clone https://github.com/edwinhern/nfl-game-dashboard.git
    cd nfl-game-dashboard
    ```
 
-2. Set up environment variables:
-   Copy the `.env.template` file in the `backend` directory to `.env` and populate it with the required values, including your Ticketmaster API key.
+2. 🔑 Set up environment variables:
+   - Copy `backend/.env.template` to `backend/.env`
+   - Update `backend/.env` with necessary values, including your Ticketmaster API key
 
-3. Start the application using Docker Compose:
+3. 🚀 Start the application using Docker Compose:
+
+   - This command initializes the PostgreSQL database, executes Flyway migrations, and launches the backend server.
    ```
    docker-compose up --build
    ```
+### 🖥️ Running Without Docker
 
-This command initializes the PostgreSQL database, executes Flyway migrations, and launches the backend server.
+If you prefer to run the project without Docker:
+
+1. 🐘 Ensure you have a PostgreSQL instance running and accessible
+2. 🔗 Update the `DATABASE_URL` in `backend/.env` to point to your PostgreSQL instance
+3. 📂 Navigate to the backend directory: `cd backend`
+4. 📦 Install dependencies: `pnpm install`
+5. 🏃‍♂️ Run the development server: `pnpm run dev`
 
 ## 🎮 API Usage
 
@@ -60,65 +81,43 @@ For a comprehensive list of endpoints and their usage, please consult the [API d
 
 ## 👩‍💻 Development
 
-To run the backend in development mode with hot reloading:
+For more information on the backend development, see the [Backend documentation](docs/BACKEND.md).
 
-```
-cd backend
-pnpm install
-pnpm run dev
-```
+For more information on api endpoint response format, see the [API documentation](docs/API.md).
 
-## 🧪 Testing
+## 🗄️ Database
 
-Execute the unit tests to verify system functionality:
+The project uses PostgreSQL with Flyway for database migrations. Key details:
 
-```
-cd backend
-pnpm test
-```
+- 📊 Database name: `nfldb`
+- 👤 Default username: `postgres`
+- 🔑 Default password: `postgres`
+
+For more information on the database schema and management, see the [Database documentation](docs/DATABASE.md).
 
 ## 🔄 Data Synchronization
 
 The system automatically synchronizes with Ticketmaster every 12 hours. This process ensures that:
 
-- New games are added to the database
-- Existing game information is updated
-- Game statuses are kept current
+- 🆕 New games are added to the database
+- 🔄 Existing game information is updated
+- 🚦 Game statuses are kept current
 
 For manual synchronization, use the `/api/sync/testSync` endpoint.
 
-## 📊 Data Modeling
-
-Our database schema includes tables for:
-
-- Games
-- Teams
-- Stadiums
-- Ticket Vendors
-
-Relationships between these entities are carefully managed to maintain data integrity and enable efficient querying.
-
-## 🔐 Error Handling and Logging
-
-The system implements robust error handling and logging mechanisms to ensure:
-
-- Detailed error messages for debugging
-- Consistent error responses in the API
-- Comprehensive logging of system activities and issues
-
 ## 🚀 Potential Improvements
 
-1. Implement caching for frequently accessed data
-2. Add rate limiting to protect the API
-3. Expand test coverage for edge cases
-4. Implement a more granular permissions system
+1. 🚀 Implement caching for frequently accessed data
+2. 🛑 Add rate limiting to protect the API
+3. 🧪 Expand test coverage for edge cases
+4. 🔐 Implement auth permissions system
+5. 🔍 Add parameter validation for `api/games/` requests
+6. 📄 Implement pagination for `api/games/` endpoint
 
-## 📚 Documentation
+## 📚 Additional Documentation
 
 For more detailed information about the system components, please refer to:
 
-- [API Documentation](docs/API.md)
-- [Database Schema](docs/DATABASE.md)
-- [Backend Architecture](docs/BACKEND.md)
-
-This project aims to provide a scalable, maintainable solution for managing NFL game data, with a focus on code quality, performance, and user experience.
+- 📘 [API Documentation](docs/API.md)
+- 🗄️ [Database Schema](docs/DATABASE.md)
+- 🏗️ [Backend Architecture](docs/BACKEND.md)
