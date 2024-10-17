@@ -6,7 +6,7 @@ import { MIN_TEAMS_PER_EVENT } from "@/api/sync";
 import env from "@/env";
 import type TicketmasterAPI from "@/lib/ticketmaster";
 import type { ParsedEvent } from "@/lib/ticketmaster/types";
-import { logger } from "@/logger";
+import { logger } from "@/middleware/logger";
 import type { DBInstance } from "@/models/database";
 import type { InsertGame } from "@/models/entities/game";
 import type { InsertGameTeam } from "@/models/entities/gameTeam";

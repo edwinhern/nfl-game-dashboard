@@ -2,7 +2,7 @@ import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
 
 import env from "@/env";
-import { logger } from "@/logger";
+import { logger } from "@/middleware/logger";
 import type { DatabaseTable } from "@/models/database";
 
 class Database {

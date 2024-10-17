@@ -6,7 +6,7 @@ import type {
 	TicketmasterResponse,
 } from "@/lib/ticketmaster/types";
 import { formatDate, parseEvents } from "@/lib/ticketmaster/utils";
-import { logger } from "@/logger";
+import { logger } from "@/middleware/logger";
 
 class TicketmasterAPI {
 	private apiKey: string;

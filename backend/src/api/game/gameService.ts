@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 
 import type { GameFilterParams, GameQueryResult } from "@/api/game/";
-import { logger } from "@/logger";
+import { logger } from "@/middleware/logger";
 import type { DBInstance } from "@/models/database";
 import type { Stadium } from "@/models/entities/stadium";
 import type { Team } from "@/models/entities/team";

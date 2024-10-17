@@ -17,18 +17,28 @@ Retrieves a list of games based on specified filters.
 
 #### Response:
 ```json
-[
-  {
-    "id": "uuid",
-    "name": "Tampa Bay Buccaneers vs. San Francisco 49ers",
-    "start_date": "2024-11-10T18:00:00Z",
-    "end_date": "2024-11-10T22:00:00Z",
-    "status": "onsale",
-    "min_price": 50.00,
-    "max_price": 500.00,
-    "team_names": ["Tampa Bay Buccaneers", "San Francisco 49ers"]
-  }
-]
+{
+  "success": true,
+  "message": "Games retrieved successfully",
+  "responseObject": [
+    {
+      "id": "fbe9c214-c3ac-42e1-af2e-8ddc1a7bac31",
+      "name": "Los Angeles Chargers vs. Tennessee Titans",
+      "start_date": "2024-11-11T03:05:00.000Z",
+      "end_date": "2024-11-11T07:05:00.000Z",
+      "status": "onsale",
+      "min_price": "59.00",
+      "max_price": "615.00",
+      "stadium_id": "9963e477-6282-42c7-a4b3-e931cf32ed46",
+      "team_names": [
+        "Los Angeles Chargers",
+        "Tennessee Titans"
+      ]
+    },
+    // ... more games
+  ],
+  "statusCode": 200
+}
 ```
 
 ### 👥 GET /api/games/teams
@@ -37,15 +47,21 @@ Retrieves a list of all teams in the system.
 
 #### Response:
 ```json
-[
-  {
-    "id": "uuid",
-    "name": "Tampa Bay Buccaneers",
-    "city": "Tampa",
-    "state": "FL",
-    "country": "US"
-  }
-]
+{
+  "success": true,
+  "message": "Teams retrieved successfully",
+  "responseObject": [
+    {
+      "id": "cc5b4d24-95a6-4ba9-bb12-82d24779bec9",
+      "name": "Tampa Bay Buccaneers",
+      "city": "Tampa",
+      "state": "FL",
+      "country": "US"
+    },
+    // ... more teams
+  ],
+  "statusCode": 200
+}
 ```
 
 ### 🏟️ GET /api/games/stadiums
@@ -54,20 +70,26 @@ Retrieves a list of all stadiums in the system.
 
 #### Response:
 ```json
-[
-  {
-    "id": "uuid",
-    "name": "Raymond James Stadium",
-    "city": "Tampa",
-    "state": "FL",
-    "country": "US",
-    "zipcode": "33607",
-    "address": "4201 North Dale Mabry Highway",
-    "timezone": "America/New_York",
-    "lon": -82.503474,
-    "lat": 27.975976
-  }
-]
+{
+  "success": true,
+  "message": "Stadiums retrieved successfully",
+  "responseObject": [
+    {
+      "id": "69dfdc9b-ed87-466a-a1a1-2d92f90f14ea",
+      "name": "Raymond James Stadium",
+      "city": "Tampa",
+      "state": "FL",
+      "country": "US",
+      "zipcode": "33607",
+      "address": "4201 North Dale Mabry Highway",
+      "timezone": "America/New_York",
+      "lon": "-82.503474",
+      "lat": "27.975976"
+    },
+    // ... more stadiums
+  ],
+  "statusCode": 200
+}
 ```
 
 ## 🔄 Synchronization Endpoints
@@ -79,9 +101,13 @@ Manually triggers a synchronization with the Ticketmaster API.
 #### Response:
 ```json
 {
-  "status": "Manual sync completed",
-  "gamesAdded": 5,
-  "gamesUpdated": 10
+  "success": true,
+  "message": "Game sync completed successfully",
+  "responseObject": {
+    "totalProcessedEvents": 56,
+    "totalSkippedEvents": 11
+  },
+  "statusCode": 200
 }
 ```
 
@@ -92,7 +118,12 @@ Retrieves the scheduled time for the next automatic synchronization.
 #### Response:
 ```json
 {
-  "nextSync": "2024-10-16T18:00:00Z"
+  "success": true,
+  "message": "Next sync time determined",
+  "responseObject": {
+    "nextSync": "2024-10-17T12:00:00.000Z"
+  },
+  "statusCode": 200
 }
 ```
 
@@ -102,38 +133,9 @@ All endpoints follow a consistent error response format:
 
 ```json
 {
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "A descriptive error message"
-  }
-}
-```
-
-Common error codes include:
-- `INVALID_PARAMETER`: When a query parameter is invalid or missing
-- `NOT_FOUND`: When a requested resource is not found
-- `INTERNAL_ERROR`: For unexpected server errors
-
-## 🔐 Authentication
-
-Currently, this API does not require authentication. However, rate limiting is applied to prevent abuse.
-
-## 📊 Pagination
-
-For endpoints that may return large datasets (e.g., `/api/games`), pagination is supported using the following query parameters:
-
-- `page`: Page number (default: 1)
-- `limit`: Number of items per page (default: 20, max: 100)
-
-The response will include metadata about the pagination:
-
-```json
-{
-  "data": [...],
-  "pagination": {
-    "currentPage": 1,
-    "totalPages": 5,
-    "totalItems": 100
-  }
+  "success": false,
+  "message": "A descriptive error message",
+  "responseObject": null,
+  "statusCode": 400
 }
 ```
