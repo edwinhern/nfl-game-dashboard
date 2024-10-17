@@ -3,12 +3,8 @@ name: Build CI
 on:
   push:
     branches: ["main"]
-    paths:
-      - "backend/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "backend/**"
 
 jobs:
   build:
@@ -25,9 +21,9 @@ jobs:
           version: 9.10.0
       - uses: actions/setup-node@v4
         with:
-          node-version-file: "./backend/.nvmrc"
+          node-version-file: ".nvmrc"
           cache: "pnpm"
-          cache-dependency-path: "./backend/pnpm-lock.yaml"
+          cache-dependency-path: "pnpm-lock.yaml"
 
       - name: Install Dependencies
         run: pnpm install

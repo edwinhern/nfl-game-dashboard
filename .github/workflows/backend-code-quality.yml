@@ -3,12 +3,8 @@ name: Backend Code Quality
 on:
   push:
     branches: ["main"]
-    paths:
-      - "backend/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "backend/**"
 
 jobs:
   quality:
@@ -24,4 +20,3 @@ jobs:
 
       - name: Run Biome
         run: biome ci .
-        working-directory: ./backend
