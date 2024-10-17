@@ -4,7 +4,8 @@ import cron from "node-cron";
 import { createGameRoutes } from "@/api/game";
 import { type SyncController, createSyncRoutes, syncContainer } from "@/api/sync";
 import env from "@/env";
-import { logger, requestLogger } from "@/logger";
+import errorHandler from "@/middleware/errorHandler";
+import { logger, requestLogger } from "@/middleware/logger";
 
 class App {
 	private static instance: App | null = null;
@@ -14,6 +15,7 @@ class App {
 		this.app = express();
 		this.setupMiddleware();
 		this.setupRoutes();
+		this.setupErrorHandling();
 		this.setupCronJob();
 	}
 
@@ -43,6 +45,11 @@ class App {
 	private setupRoutes(): void {
 		this.app.use("/api/sync", createSyncRoutes());
 		this.app.use("/api/games", createGameRoutes());
+	}
+
+	private setupErrorHandling(): void {
+		this.app.use(errorHandler.handleNotFound);
+		this.app.use(errorHandler.handleError);
 	}
 
 	private setupCronJob(): void {
