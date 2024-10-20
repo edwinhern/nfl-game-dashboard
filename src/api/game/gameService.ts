@@ -20,12 +20,7 @@ export class GameService {
 	async getGames(filter: GameFilterParams): Promise<ServiceResponse<GameQueryResult[]>> {
 		try {
 			const games = await gameRepository.queryGames(this.db, filter);
-			const formatGames = games.map((game) => ({
-				...game,
-				team_names: game.team_names ? game.team_names.split(",") : [],
-			}));
-
-			return ServiceResponse.success("Games retrieved successfully", formatGames);
+			return ServiceResponse.success("Games retrieved successfully", games);
 		} catch (error) {
 			logger.error("Error fetching games:", error);
 			return ServiceResponse.failure("Failed to fetch games", [], StatusCodes.INTERNAL_SERVER_ERROR);

@@ -20,7 +20,3 @@ export interface GameQueryResult {
 	stadium_id: UUID;
 	team_names: string[];
 }
-
-export interface RawGameQueryResult extends Omit<GameQueryResult, "team_names"> {
-	team_names: string | null;
-}

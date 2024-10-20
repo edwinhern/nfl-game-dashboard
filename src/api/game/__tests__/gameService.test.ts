@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-import { type GameFilterParams, type GameQueryResult, GameService, type RawGameQueryResult } from "@/api/game/";
+import { type GameFilterParams, type GameQueryResult, GameService } from "@/api/game/";
 import type { DBInstance } from "@/models/database";
 import type { Stadium } from "@/models/entities/stadium";
 import type { Team } from "@/models/entities/team";
@@ -26,7 +26,7 @@ describe("GameService", () => {
 	describe("getGames", () => {
 		it("should return games successfully", async () => {
 			// Arrange
-			const mockGames: RawGameQueryResult[] = [
+			const mockGames: GameQueryResult[] = [
 				{
 					id: "462966fc-5cbd-49ae-a010-4a4fcabaf89d",
 					name: "Tampa Bay Buccaneers vs. San Francisco 49ers",
@@ -36,13 +36,10 @@ describe("GameService", () => {
 					min_price: null,
 					max_price: null,
 					stadium_id: "cfd917b4-b830-4cd1-b86b-8c3c24a94477",
-					team_names: "Tampa Bay Buccaneers,San Francisco 49ers",
+					team_names: ["Tampa Bay Buccaneers", "San Francisco 49ers"],
 				},
 			];
-			const expectedGames: GameQueryResult[] = [
-				{ ...mockGames[0], team_names: ["Tampa Bay Buccaneers", "San Francisco 49ers"] },
-			];
-			const expectedResponse = ServiceResponse.success("Games retrieved successfully", expectedGames);
+			const expectedResponse = ServiceResponse.success("Games retrieved successfully", mockGames);
 			vi.mocked(gameRepository.queryGames).mockResolvedValue(mockGames);
 
 			// Act
@@ -73,7 +70,7 @@ describe("GameService", () => {
 				stadiumId: "cfd917b4-b830-4cd1-b86b-8c3c24a94477",
 				status: "onsale",
 			};
-			const mockGames: RawGameQueryResult[] = [
+			const mockGames: GameQueryResult[] = [
 				{
 					id: "462966fc-5cbd-49ae-a010-4a4fcabaf89d",
 					name: "Tampa Bay Buccaneers vs. San Francisco 49ers",
@@ -83,13 +80,11 @@ describe("GameService", () => {
 					min_price: null,
 					max_price: null,
 					stadium_id: "cfd917b4-b830-4cd1-b86b-8c3c24a94477",
-					team_names: "Tampa Bay Buccaneers,San Francisco 49ers",
+					team_names: ["Tampa Bay Buccaneers", "San Francisco 49ers"],
 				},
 			];
-			const expectedGames: GameQueryResult[] = [
-				{ ...mockGames[0], team_names: ["Tampa Bay Buccaneers", "San Francisco 49ers"] },
-			];
-			const expectedResponse = ServiceResponse.success("Games retrieved successfully", expectedGames);
+
+			const expectedResponse = ServiceResponse.success("Games retrieved successfully", mockGames);
 			vi.mocked(gameRepository.queryGames).mockResolvedValue(mockGames);
 
 			// Act
