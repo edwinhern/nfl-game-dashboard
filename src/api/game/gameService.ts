@@ -1,6 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 
 import type { GameFilterParams, GameQueryResult } from "@/api/game/";
+import env from "@/env";
+import redisClient from "@/lib/redis";
 import { logger } from "@/middleware/logger";
 import type { DBInstance } from "@/models/database";
 import type { Stadium } from "@/models/entities/stadium";
@@ -28,8 +30,19 @@ export class GameService {
 	}
 
 	async getTeams(): Promise<ServiceResponse<Team[]>> {
+		const cacheKey = "teams";
 		try {
+			const cachedData = await redisClient.get(cacheKey);
+			if (cachedData) {
+				const teams = JSON.parse(cachedData);
+				return ServiceResponse.success("Teams retrieved successfully", teams);
+			}
+
 			const teams = await teamRepository.findAll(this.db);
+
+			// If not in cache, fetch from database and cache it
+			await redisClient.setex(cacheKey, env.CACHE_TTL, JSON.stringify(teams));
+
 			return ServiceResponse.success("Teams retrieved successfully", teams);
 		} catch (error) {
 			logger.error("Error fetching teams:", error);
@@ -38,8 +51,21 @@ export class GameService {
 	}
 
 	async getStadiums(): Promise<ServiceResponse<Stadium[]>> {
+		const cacheKey = "stadiums";
 		try {
+			const cachedData = await redisClient.get(cacheKey);
+			if (cachedData) {
+				const stadiums = JSON.parse(cachedData);
+				logger.info("Stadiums retrieved from cache");
+				return ServiceResponse.success("Stadiums retrieved successfully", stadiums);
+			}
+
 			const stadiums = await stadiumRepository.findAll(this.db);
+			logger.info("Stadiums retrieved from database");
+
+			// If not in cache, fetch from database and cache it
+			await redisClient.setex(cacheKey, env.CACHE_TTL, JSON.stringify(stadiums));
+
 			return ServiceResponse.success("Stadiums retrieved successfully", stadiums);
 		} catch (error) {
 			logger.error("Error fetching stadiums:", error);
