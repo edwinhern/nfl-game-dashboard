@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { bool, cleanEnv, host, port, str, testOnly } from "envalid";
+import { bool, cleanEnv, host, num, port, str, testOnly } from "envalid";
 
 dotenv.config();
 
@@ -15,4 +15,6 @@ export default cleanEnv(process.env, {
 	TICKETMASTER_API_KEY: str({ devDefault: testOnly(""), desc: "The API key for the Ticketmaster API" }),
 	SYNC_SCHEDULE: str({ devDefault: testOnly("0 */12 * * *"), desc: "The cron schedule for syncing games" }),
 	DEBUG_MODE: bool({ devDefault: testOnly(false), desc: "Whether to enable debug mode" }),
+	REDIS_URL: str({ devDefault: testOnly(""), desc: "The URL to the Redis server" }),
+	CACHE_TTL: num({ devDefault: testOnly(3600), desc: "The time-to-live for cache entries in seconds" }),
 });

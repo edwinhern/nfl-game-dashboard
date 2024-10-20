@@ -26,16 +26,23 @@ services:
       db:
         condition: service_healthy
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
   backend:
     build: ./
     container_name: nfl_backend
     environment:
+      REDIS_URL: redis://redis:6379
       DATABASE_URL: postgres://postgres:postgres@db:5432/nfldb
       NODE_ENV: production
     ports:
       - "8080:8080"
     depends_on:
       - flyway
+      - redis
     volumes:
       - ./:/app
       - /app/node_modules
