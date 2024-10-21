@@ -45,6 +45,8 @@ export async function findByEventId(db: DBInstance, eventId: string): Promise<Ga
 }
 
 export async function queryGames(db: DBInstance, filter: GameFilterParams): Promise<GameQueryResult[]> {
+	const offset = (filter.page - 1) * filter.pageSize;
+
 	// From and Join Clause
 	let query = db
 		.selectFrom("games")
@@ -73,6 +75,9 @@ export async function queryGames(db: DBInstance, filter: GameFilterParams): Prom
 
 	// Select clause (include array_agg)
 	query = query.select(GAME_FIELDS).select((eb) => eb.fn.agg("array_agg", [eb.ref("teams.name")]).as("team_names"));
+
+	// Order by and Limit Clause
+	query = query.orderBy("games.id", "asc").limit(filter.pageSize).offset(offset);
 
 	return (await query.execute()) as GameQueryResult[];
 }

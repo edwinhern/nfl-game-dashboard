@@ -7,6 +7,8 @@ export interface GameFilterParams {
 	teamId?: UUID;
 	stadiumId?: UUID;
 	status?: GameStatus;
+	page: number;
+	pageSize: number;
 }
 
 export interface GameQueryResult {
