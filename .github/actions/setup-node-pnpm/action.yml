@@ -3,17 +3,28 @@ description: "Sets up Node.js and pnpm with caching"
 
 inputs:
   node-version:
-    description: "Node.js version"
+    description: "Node.js version (or path to .node-version file)"
     required: false
-    default: "22.9.0"
+    default: ""
 
 runs:
   using: composite
   steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Read .node-version file (if provided)
+      id: read-node-version
+      uses: actions/read-file@v1
+      if: ${{ inputs.node-version == '.node-version' }}
+      with:
+        path: ./.node-version
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version: ${{ steps.read-node-version.outputs.content || inputs.node-version || '22' }} # Use file content or input or default
+        cache: "pnpm"
 
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
