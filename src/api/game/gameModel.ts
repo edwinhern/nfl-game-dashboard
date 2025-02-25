@@ -7,6 +7,8 @@ export interface GameFilterParams {
 	teamId?: UUID;
 	stadiumId?: UUID;
 	status?: GameStatus;
+	page: number;
+	pageSize: number;
 }
 
 export interface GameQueryResult {
@@ -19,8 +21,4 @@ export interface GameQueryResult {
 	max_price: number | null;
 	stadium_id: UUID;
 	team_names: string[];
-}
-
-export interface RawGameQueryResult extends Omit<GameQueryResult, "team_names"> {
-	team_names: string | null;
 }

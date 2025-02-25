@@ -21,6 +21,8 @@ export class GameController {
 			teamId: req.query.teamId as UUID,
 			stadiumId: req.query.stadiumId as UUID,
 			status: req.query.status as GameStatus,
+			page: req.query.page ? Number.parseInt(req.query.page as string, 10) : 1,
+			pageSize: req.query.pageSize ? Number.parseInt(req.query.pageSize as string, 10) : 20,
 		};
 
 		const result: ServiceResponse<GameQueryResult[]> = await this.gameService.getGames(filter);

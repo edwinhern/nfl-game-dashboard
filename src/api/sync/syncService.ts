@@ -42,7 +42,11 @@ export class SyncService {
 		} catch (error) {
 			logger.error("Error parsing cron expression:", error);
 			const response = { nextSync: null };
-			return ServiceResponse.failure("Failed to determine next sync time", response, StatusCodes.INTERNAL_SERVER_ERROR);
+			return ServiceResponse.failure(
+				"Failed to determine next sync time",
+				response,
+				StatusCodes.INTERNAL_SERVER_ERROR,
+			);
 		}
 	}
 
