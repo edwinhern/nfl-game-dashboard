@@ -6,6 +6,10 @@ inputs:
     description: "Node.js version (or path to .node-version file)"
     required: false
     default: ""
+  install-dependencies:
+    description: "Install pnpm dependencies (true/false)"
+    required: false
+    default: "true" # Default to true for the setup job
 
 runs:
   using: composite
@@ -13,30 +17,27 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version-file: ".node-version"
+        path: ./.node-version
 
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
       with:
-        run_install: |
-          - recursive: true
-          - args: [--frozen-lockfile]
+        run_install: false # pnpm action handles install separately now
 
     - name: Get pnpm store directory
       shell: bash
       run: |
         echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-    - name: Restore cache
+    - name: Restore pnpm cache
       uses: actions/cache@v4
       with:
-        path: |
-          ${{ env.STORE_PATH }}
-          node_modules
+        path: ${{ env.STORE_PATH }}
         key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-
 
-    - name: Install dependencies
+    - name: Install dependencies (conditional)
+      if: ${{ inputs.install-dependencies == 'true' }} # Only install if input is true
       shell: bash
       run: pnpm install --frozen-lockfile

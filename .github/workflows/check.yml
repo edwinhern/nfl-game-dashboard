@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-node-pnpm
+        with:
+          install-dependencies: true
   lint:
     name: Lint
     needs: setup
@@ -22,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node-pnpm
         with:
-          run_install: false
+          install-dependencies: false
       - run: pnpm lint
 
   format:
@@ -43,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node-pnpm
         with:
-          run_install: false
+          install-dependencies: false
       - run: pnpm build
 
   test:
@@ -54,5 +56,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node-pnpm
         with:
-          run_install: false
+          install-dependencies: false
       - run: pnpm test
