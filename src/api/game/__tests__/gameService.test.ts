@@ -51,7 +51,11 @@ describe("GameService", () => {
 
 		it("should handle errors when fetching games", async () => {
 			// Arrange
-			const expectedResponse = ServiceResponse.failure("Failed to fetch games", [], StatusCodes.INTERNAL_SERVER_ERROR);
+			const expectedResponse = ServiceResponse.failure(
+				"Failed to fetch games",
+				[],
+				StatusCodes.INTERNAL_SERVER_ERROR,
+			);
 			vi.mocked(gameRepository.queryGames).mockRejectedValue(new Error("Database error"));
 
 			// Act

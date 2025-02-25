@@ -20,7 +20,9 @@ class Logger {
 		this.logger = winston.createLogger({
 			level: "info",
 			format: logFormat,
-			transports: [new winston.transports.Console({ level: env.DEBUG_MODE ? "debug" : "info", silent: env.isTest })],
+			transports: [
+				new winston.transports.Console({ level: env.DEBUG_MODE ? "debug" : "info", silent: env.isTest }),
+			],
 		});
 	}
 
